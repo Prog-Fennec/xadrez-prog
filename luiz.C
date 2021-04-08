@@ -182,7 +182,22 @@ struct Posicao IniciaTabuleiro()
     tabuleiro.tab[7][3]=InsereInicioPeca(tabuleiro.pretas, -5, 7, 3, 0);
 
     return tabuleiro;
+}
 
+struct Posicao CopiaPosicao(struct Posicao *posOrig) {
+  struct Posicao *posCpy;
+  posCpy -> qtdBrancas = posOrig -> qtdBrancas;
+  posCpy -> qtdPretas = posOrig -> qtdPretas;
+  posCpy -> jogVez = posOrig -> jogVez;
+  posCpy -> brancas = posOrig -> brancas;
+  posCpy -> pretas = posOrig -> pretas;
+  for (size_t i = 0; i < 8; i++) {
+    for (size_t j = 0; j < 8; j++) {
+      posCpy -> tab[i][j] = posOrig -> tab[i][j];
+    }
+  }
+
+  return posCpy;
 }
 
 //Inicio das funções de jogadas de peças
