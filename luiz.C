@@ -80,18 +80,6 @@ struct Peca* InsereInicioPeca(struct Peca* sentinela, int codigo, int linha, int
     novo->coluna=coluna;
     novo->codigo=codigo;
     novo->ataques=ataques;
-    /*
-    if(sentinela==NULL)
-    {
-        sentinela = (struct Peca*) malloc(sizeof(struct Peca));
-        sentinela->codigo = 0;
-        sentinela->prox = novo;
-        sentinela->ant = novo;
-        novo->prox=sentinela;
-        novo->ant=sentinela;
-        return novo;
-    }
-    */
     novo->prox=sentinela->prox;
     novo->ant=sentinela;
     sentinela->prox->ant=novo;
@@ -106,19 +94,6 @@ struct Jogada* InsereInicioJogada(struct Jogada* sentinela, int linhaDe, int col
     novo->colunaDe=colunaDe;
     novo->linhaPara=linhaPara;
     novo->colunaPara=colunaPara;
-    /*
-    if(sentinela==NULL)
-    {
-        sentinela = (struct Jogada*) malloc(sizeof(struct Jogada));
-        sentinela->colunaDe = -1;
-        sentinela->linhaDe = -1;
-        sentinela->prox = novo;
-        sentinela->ant = novo;
-        novo->prox=sentinela;
-        novo->ant=sentinela;
-        return novo;
-    }
-    */
     novo->prox=sentinela->prox;
     novo->ant=sentinela;
     sentinela->prox->ant=novo;
@@ -137,6 +112,25 @@ void RemovePeca(struct Peca* lista, int linha, int coluna)
         aux->ant->prox = aux->prox;
         free(aux);
     }
+}
+
+void LiberaMemoria(struct Posicao *posDel) {
+  struct Peca *atual = posDel -> brancas;
+  struct Peca *prox;
+  while (atual != NULL) {
+    prox = atual->prox;
+    free(atual);
+    atual = prox;
+  }
+
+  atual = posDel -> pretas;
+  while (atual != NULL) {
+    prox = atual->prox;
+    free(atual);
+    atual = prox;
+  }
+
+  posDel = NULL;
 }
 
 struct Posicao IniciaTabuleiro()
@@ -182,7 +176,22 @@ struct Posicao IniciaTabuleiro()
     tabuleiro.tab[7][3]=InsereInicioPeca(tabuleiro.pretas, -5, 7, 3, 0);
 
     return tabuleiro;
+}
 
+struct Posicao *CopiaPosicao(struct Posicao *posOrig) {
+  struct Posicao *posCpy;
+  posCpy -> qtdBrancas = posOrig -> qtdBrancas;
+  posCpy -> qtdPretas = posOrig -> qtdPretas;
+  posCpy -> jogVez = posOrig -> jogVez;
+  posCpy -> brancas = posOrig -> brancas;
+  posCpy -> pretas = posOrig -> pretas;
+  for (size_t i = 0; i < 8; i++) {
+    for (size_t j = 0; j < 8; j++) {
+      posCpy -> tab[i][j] = posOrig -> tab[i][j];
+    }
+  }
+
+  return posCpy;
 }
 
 //Inicio das funções de jogadas de peças
